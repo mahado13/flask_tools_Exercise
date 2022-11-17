@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}Question 0 page{% endblock %}
+{% block h1 %} Questions Page{% endblock %}
+
+<!-- 
+'''
+Author: Mahad Osman
+Date: Nov 17th
+Assignment: Flask Tools Exercise 
+- Our simple form to handle our users input.
+- question label is created based on our current question id
+- choices are provided for our current questions choices.
+''' -->
+
+
+{% block content %}
+    <form action="/answers"  method = "POST" id="questions-form" name="questions-form">
+        <div>
+        <label for="question" id="questionLabel">{{questions}}</label>
+        {% for choice in choices %}
+        <input type="radio" name="question" value="{{choice}}"> {{choice}}
+        {% endfor %}
+        </div>
+        <button> submit</button>
+    </form>
+
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %}My awesome page title{% endblock %}
+{% block h1 %} {{title}} {% endblock %}
+
+<!-- 
+'''
+Author: Mahad Osman
+Date: Nov 17th
+Assignment: Flask Tools Exercise 
+- Our root page that will display our survey name and instructions!
+''' -->
+
+{% block content %}
+
+  <h2>{{instructions}}</h2>
+ 
+  <form action="/start">
+    <button>Start Survey!</button>
+  </form>
+
+{% endblock %}
