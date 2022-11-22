@@ -1,12 +1,14 @@
 from crypt import methods
+from http.client import responses
 from urllib import response
-from flask import Flask, request, render_template, redirect, flash
+from flask import Flask, request, render_template, redirect, flash, session
 from flask_debugtoolbar import DebugToolbarExtension
 from surveys import satisfaction_survey
 
 '''
 Author: Mahad Osman
 Date: Nov 17th
+Updated: Nov 22 To include session.
 Assignment: Flask Tools Exercise 
 '''
 
@@ -17,7 +19,9 @@ debug = DebugToolbarExtension(app)
 
 #Setting up both our question and respons lists
 questions = satisfaction_survey.questions
-responses = []
+#session['RESPONSES'] = []
+
+
 
 #This allows us to extract the questions in a list
 #Using list comprehensions to extract the question questions and actual choices
@@ -31,10 +35,16 @@ def show_home():
     instructions = satisfaction_survey.instructions
     return render_template("root.html", title = title, instructions = instructions)
 
-@app.route('/start')
+@app.route('/start', methods=["POST"])
 def start_survey():
-    '''Start path which will pop in to reset our responses array than redirect to our first question'''
-    responses = []
+    '''Start path which will pop in to reset our responses array than redirect to our first question
+        - Updated to include our sessions.
+        -Changed to post to push our session back up.
+    '''
+    session['RESPONSES'] = []
+    # print("*********SESSION************")
+    # print(session['RESPONSES'] )
+    # print("*********SESSION************")
     return redirect("/questions/0")
 
 @app.route('/questions/<int:id>')
@@ -46,6 +56,9 @@ def show_question(id):
     '''
     questions = questions_list[id]
     choices = choice_list[id]
+    
+    '''Setting our session variable to be used.'''
+    responses =  session.get('RESPONSES') 
 
     #If they try and reach the end we will go thank
     if(len(responses) == len(questions_list)):
@@ -67,7 +80,12 @@ def import_answers():
         - Once the survey is completed it shall redirect our user to our thank you page.
     '''
     answer = request.form["question"]
+
+    '''Session addition. To add our session values we must first change it from a session variable to a list to append. Than add it bacl.'''
+    responses = session['RESPONSES']
     responses.append(answer)
+    session['RESPONSES'] = responses
+
     #print(responses)
     if(len(responses) == len(questions_list)):
         return redirect("/thankyou")
